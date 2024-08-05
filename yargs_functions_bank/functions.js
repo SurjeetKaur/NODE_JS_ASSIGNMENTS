@@ -2,73 +2,65 @@
 const f1 = require('fs');
 
 // Function to read customer data from file.json
-function readCustomersData() {
+function readAccountHoldersData() {
   if (f1.existsSync('file.json')) {
-      const data_buffer = f1.readFileSync("file.json");
-      const data_str = data_buffer.toString();
-      const customers = JSON.parse(data_str);
-      return customers;
+    const data_buffer = f1.readFileSync("file.json");
+    const data_str = data_buffer.toString();
+    const accountHolders = JSON.parse(data_str);
+    return accountHolders;
   }
   else{
-   // const emptyData=[];
-    ///f1.writeFileSync("File.json", JSON.stringify(emptyData));
-    //console.log('file.json has been created with an empty array.');
-    return []; //empty if file.json does not exist
-
-  }
- 
+    const accounts=[];
+    f1.writeFileSync("File.json", JSON.stringify(accounts));
+    console.log('file.json has been created with an empty array.');
+  } 
 };
 
 
 // Function to add customer data
 
-function addCustomersData(name, age, code) {
-  let customersDetails = readCustomersData();
-  const hasDuplicateRecord = customersDetails.find(customer =>customer.code ===code); //checking duplicate data
-  //console.log(hasDuplicateRecord);
-
+function addNewAccounts(accountNumber, name, balance) {
+  let accountHolders = readAccountHoldersData();
+  const hasDuplicateRecord = accountHolders.find(account =>account.accountNumber ===accountNumber); //checking duplicate data
+  
+// if duplicate record exists
   if (hasDuplicateRecord) {  
-    console.log("provided customer data already exists in file:" ,hasDuplicateRecord);
-    console.log("no new object will add");
-    return;
+    console.log("provided account holder already exists:" ,hasDuplicateRecord);
     } else
     {
-    const newCustomer = {name,age,code};
-    customersDetails.push(newCustomer); // adding new object in file.json
-    const data = JSON.stringify(customersDetails);
-    f1.writeFileSync("file.json", data); //save new customer data in file.json
-    console.log("Customer data added and saved successfully in file.json ");
-    return;
-  }
+      const newAccountHolder = {accountNumber,name,balance};
+      accountHolders.push(newAccountHolder); // adding new object in file.json
+      const data = JSON.stringify(accountHolders);
+      f1.writeFileSync("file.json", data); //save new customer data in file.json
+      console.log("New Account added successfully");
+      return;
+    }
 };
 
   //function to remove customer data
-  const removeCustomersData= function(code){
-    let customersDetails = readCustomersData(); //read existing record in file through main read function 
-    const originalLength=customersDetails.length;
-    const filterCode = customersDetails.filter(customer => customer.code !== code);  // filter the record which does not match with provided code
-
-    console.log("filtered and original array length",filterCode.length,originalLength);
+  const removeAccountHoldersData= function(accountNumber){
+    let accountHolders = readAccountHoldersData(); //read existing record in file through main read function 
+    const originalLength=accountHolders.length;
+    const filterAccountNumber = accountHolders.filter(account => account.accountNumber !== accountNumber);  // filter the record which does not match with provided code
+    //console.log("filtered and original array length",filterAccountNumber.length,originalLength);
     //update data in file.json
-    const filteredData = JSON.stringify(filterCode); // convert the filtered data to JSON string
+    const filteredData = JSON.stringify(filterAccountNumber); // convert the filtered data to JSON string
     f1.writeFileSync("file.json", filteredData); // write the filtered data back to file.json
     
     // checking whether provided code data actually removed from file.json or not 
-    if(filterCode.length===originalLength){
-      //console.log("filtered and original array length",filterCode.length,originalLength);
-      console.log(`no matching code found with provided code to remove: ${code}`);
-    }
-    else{
-      console.log(`Customer data with code ${code} removed successfully from file.json`);
-      console.log("updated customer data",JSON.parse(filteredData));
-    }
+      if(filterAccountNumber.length===originalLength){
+        console.log(`no matching account number found : ${accountNumber}`);
+      }
+      else{
+        console.log(`Customer data with code ${accountNumber} removed successfully from file.json`);
+      }
 
   };
 
 
 
 
-module.exports = { readCustomersData,addCustomersData,removeCustomersData };
+module.exports = { readAccountHoldersData,addNewAccounts,removeAccountHoldersData };
 
 
 

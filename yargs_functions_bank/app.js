@@ -3,52 +3,52 @@ const getMethod = require("./functions");
 const yargs = require('yargs');
  
 
- 
+ // get accountholders data
 yargs.command({
     command: "get",
     handler: function(){
-        console.log("getting customer data....")
-        const customers_data=getMethod.readCustomersData();
+        console.log("getting account holders data....")
+        const customers_data=getMethod.readAccountHoldersData();
         console.log(customers_data);
     }
 }); 
 
-// mofidy or overeride data in json file
+// add account holders's data in json file
 yargs.command({
     command: "add",
     builder:{
-        name:{
+        accountNumber:{
         demandOption: true, //whether we need to keep it optional or not
-        type:"string",
+        type:"number",
         },
-        age:{
-            demandOption: true,
-            type:"number",
-        },
-        code:{
+        name:{
             demandOption: true,
             type:"string",
         },
+        balance:{
+            demandOption: true,
+            type:"number",
+        },
     },
     handler: function(argv){
-        console.log("checking conditions whether new customer's data should add or not..... ");
-        getMethod.addCustomersData(argv.name,argv.age,argv.code);
+        console.log("adding new account......");
+        getMethod.addNewAccounts(argv.accountNumber,argv.name,argv.balance);
     },
 });
 
 
-// remove data from json file
+// remove account holders's data from json file
 yargs.command({
     command: "remove",
     builder:{
-        code:{
+        accountNumber:{
             demandOption: true,
-            type:"string",
+            type:"number",
             },
             },
             handler: function(argv){
-                console.log("checking conditions whether customer's data should remove or not..... ");
-                getMethod.removeCustomersData(argv.code);
+                console.log("removing account holder data...........");
+                getMethod.removeAccountHoldersData(argv.accountNumber);
             },
 
 });
